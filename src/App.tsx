@@ -1,25 +1,55 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Link, Switch, Route } from 'react-router-dom';
+import loadable from '@loadable/component';
+// eslint-disable-next-line @emotion/no-vanilla
+import { css } from '@emotion/css';
+
+import { store } from './store';
+
+const About = loadable(() => import('./pages/About'));
+const Articles = loadable(() => import('./pages/Articles'));
+const Todos = loadable(() => import('./pages/Todos/Todos'));
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <BrowserRouter>
+        <main className="App">
+          <header className="App-header">
+            <nav>
+              <ul
+                className={css`
+                  display: flex;
+                  padding: 10px;
+                  font-size: 18px;
+                  list-style: none;
+
+                  & > li {
+                    padding: 5px;
+                  }
+                `}
+              >
+                <li>
+                  <Link to="/">Todos</Link>
+                </li>
+                <li>
+                  <Link to="/articles">Articles</Link>
+                </li>
+                <li>
+                  <Link to="/about">About</Link>
+                </li>
+              </ul>
+            </nav>
+          </header>
+          <Switch>
+            <Route path="/about" component={About} />
+            <Route path="/articles" component={Articles} />
+            <Route path="/" component={Todos} />
+          </Switch>
+        </main>
+      </BrowserRouter>
+    </Provider>
   );
 }
 

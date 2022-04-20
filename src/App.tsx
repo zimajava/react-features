@@ -8,7 +8,7 @@ import { css } from '@emotion/css';
 import { store } from './store';
 
 const About = loadable(() => import('./pages/About'));
-const Articles = loadable(() => import('./pages/Articles'));
+const Articles = loadable(() => import('./pages/Note/Note'));
 const Todos = loadable(() => import('./pages/Todos/Todos'));
 
 function App() {

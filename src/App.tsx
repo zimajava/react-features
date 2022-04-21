@@ -7,7 +7,7 @@ import { css } from '@emotion/css';
 
 import { store } from './store';
 
-const About = loadable(() => import('./pages/About'));
+const About = loadable(() => import('./pages/About/About'));
 const Articles = loadable(() => import('./pages/Note/Note'));
 const Todos = loadable(() => import('./pages/Todos/Todos'));
 

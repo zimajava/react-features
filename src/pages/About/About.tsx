@@ -4,21 +4,19 @@ import Immutable from 'immutable';
 import {
   CellMeasurer,
   CellMeasurerCache,
-  AutoSizer,
   Masonry,
   Size,
   Positioner,
   MasonryCellProps,
+  createMasonryCellPositioner,
+  AutoSizer,
 } from 'react-virtualized';
 // eslint-disable-next-line @emotion/no-vanilla
 import { css } from '@emotion/css';
 
-import createCellPositioner from './createCellPositioner';
 import { generateRandomList } from './utils';
 
-const cache = new CellMeasurerCache({ defaultHeight: 250, defaultWidth: 200, fixedWidth: true });
-
-const list = Immutable.List(generateRandomList());
+const cellMeasurerCache = new CellMeasurerCache({ defaultHeight: 250, defaultWidth: 200, fixedWidth: true });
 
 const state = {
   columnWidth: 200,
@@ -28,16 +26,16 @@ const state = {
 };
 
 function BaseAbout() {
+  const [list] = React.useState(Immutable.List(generateRandomList()));
   const masonry = React.useRef<Masonry | null>();
   const columnCount = React.useRef(0);
-  const scrollTop = React.useRef(false);
-  const size = React.useRef<Size>({ width: 0, height: 0 });
+  const size = React.useRef<Size>({ width: 0, height: state.height });
   const cellPositioner = React.useRef<Positioner | null>();
 
   const initCellPositioner = () => {
     if (!cellPositioner.current) {
-      cellPositioner.current = createCellPositioner({
-        cellMeasurerCache: cache,
+      cellPositioner.current = createMasonryCellPositioner({
+        cellMeasurerCache,
         columnCount: columnCount.current,
         columnWidth: state.columnWidth,
         spacer: state.gutterSize,
@@ -49,14 +47,6 @@ function BaseAbout() {
     columnCount.current = Math.floor(size.current.width / (state.columnWidth + state.gutterSize));
   };
 
-  React.useEffect(() => {
-    size.current.height = state.height;
-    initCellPositioner();
-    calculateColumnCount();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const resetCellPositioner = () => {
     if (cellPositioner.current) {
       cellPositioner.current.reset({
@@ -67,8 +57,30 @@ function BaseAbout() {
     }
   };
 
+  React.useLayoutEffect(() => {
+    initCellPositioner();
+    calculateColumnCount();
+
+    return () => {
+      cellMeasurerCache.clearAll();
+      resetCellPositioner();
+
+      if (masonry.current) {
+        masonry.current.clearCellPositions();
+      }
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const recomputeRowsSizes = ({ width }: Size) => {
     size.current.width = width;
+
+    cellMeasurerCache.clearAll();
+
+    if (masonry.current) {
+      masonry.current.clearCellPositions();
+    }
 
     calculateColumnCount();
     resetCellPositioner();
@@ -79,12 +91,10 @@ function BaseAbout() {
   };
 
   const cellRenderer = ({ index, key, parent, style }: MasonryCellProps) => {
-    const { columnWidth } = state;
-
     const datum = list.get(index % list.size);
 
     return (
-      <CellMeasurer cache={cache} index={index} key={key} parent={parent}>
+      <CellMeasurer cache={cellMeasurerCache} index={index} key={key} parent={parent}>
         <div
           className={css`
             display: flex;
@@ -94,7 +104,7 @@ function BaseAbout() {
             background-color: #f7f7f7;
             word-break: break-all;
           `}
-          style={{ ...style, width: columnWidth }}
+          style={{ ...style, width: state.columnWidth }}
         >
           <div
             style={{
@@ -119,20 +129,10 @@ function BaseAbout() {
   };
 
   return (
-    <AutoSizer
-      // disableHeight
-      // height={state.height}
-      style={{ height: state.height, width: '100%' }}
-      onResize={recomputeRowsSizes}
-      overscanByPixels={state.overscanByPixels}
-      // scrollTop={scrollTop.current}
-    >
+    <AutoSizer style={{ height: 'calc(100vh - 165px)', width: '100%' }} onResize={recomputeRowsSizes}>
       {({ width, height }) => {
         size.current.width = width;
         size.current.height = height;
-
-        initCellPositioner();
-        calculateColumnCount();
 
         return (
           <Masonry
@@ -140,14 +140,13 @@ function BaseAbout() {
               masonry.current = ref;
             }}
             autoHeight={false}
-            cellCount={1000}
-            cellMeasurerCache={cache}
+            cellCount={list.count()}
+            cellMeasurerCache={cellMeasurerCache}
             // @ts-ignore
             cellPositioner={cellPositioner.current}
             cellRenderer={cellRenderer}
-            height={state.height}
+            height={height}
             overscanByPixels={state.overscanByPixels}
-            // scrollTop={scrollTop.current}
             width={width}
           />
         );

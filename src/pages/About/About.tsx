@@ -15,11 +15,12 @@ import {
 import { css } from '@emotion/css';
 
 import { generateRandomList } from './utils';
+import { NoteListItem } from './NoteListItem';
 
 const cellMeasurerCache = new CellMeasurerCache({ defaultHeight: 250, defaultWidth: 200, fixedWidth: true });
 
 const state = {
-  columnWidth: 200,
+  columnWidth: 307,
   height: 300,
   gutterSize: 10,
   overscanByPixels: 0,
@@ -91,7 +92,7 @@ function BaseAbout() {
   };
 
   const cellRenderer = ({ index, key, parent, style }: MasonryCellProps) => {
-    const datum = list.get(index % list.size);
+    const data = list.get(index % list.size);
 
     return (
       <CellMeasurer cache={cellMeasurerCache} index={index} key={key} parent={parent}>
@@ -106,23 +107,7 @@ function BaseAbout() {
           `}
           style={{ ...style, width: state.columnWidth }}
         >
-          <div
-            style={{
-              backgroundColor: datum?.color,
-              borderRadius: '0.5rem',
-              height: (datum?.size || 0) * 3,
-              marginBottom: '0.5rem',
-              width: '100%',
-              fontSize: 20,
-              color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {index}
-          </div>
-          {datum?.random}
+          <NoteListItem maxWidth={state.columnWidth} data={data} />
         </div>
       </CellMeasurer>
     );

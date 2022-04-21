@@ -33,7 +33,9 @@
     "web-vitals": "2.1.4",
     "slate-history": "0.66.0",
     "immutable": "4.0.0",
-    "react-virtualized": "9.22.3"
+    "react-virtualized": "9.22.3",
+    "@mui/material": "5.6.2",
+    "@mui/icons-material": "5.6.2"
   },
   "devDependencies": {
     "@emotion/eslint-plugin": "11.7.0",

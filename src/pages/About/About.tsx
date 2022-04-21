@@ -25,7 +25,6 @@ const state = {
   height: 300,
   gutterSize: 10,
   overscanByPixels: 0,
-  windowScrollerEnabled: false,
 };
 
 function BaseAbout() {
@@ -126,7 +125,7 @@ function BaseAbout() {
       style={{ height: state.height, width: '100%' }}
       onResize={recomputeRowsSizes}
       overscanByPixels={state.overscanByPixels}
-      scrollTop={scrollTop.current}
+      // scrollTop={scrollTop.current}
     >
       {({ width, height }) => {
         size.current.width = width;
@@ -140,15 +139,15 @@ function BaseAbout() {
             ref={(ref) => {
               masonry.current = ref;
             }}
-            autoHeight
+            autoHeight={false}
             cellCount={1000}
             cellMeasurerCache={cache}
             // @ts-ignore
             cellPositioner={cellPositioner.current}
             cellRenderer={cellRenderer}
-            height={height}
+            height={state.height}
             overscanByPixels={state.overscanByPixels}
-            scrollTop={scrollTop.current}
+            // scrollTop={scrollTop.current}
             width={width}
           />
         );

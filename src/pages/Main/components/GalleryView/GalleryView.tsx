@@ -1,21 +1,19 @@
-/* eslint-disable no-param-reassign */
 import React from 'react';
-import Immutable from 'immutable';
 import {
+  AutoSizer,
   CellMeasurer,
   CellMeasurerCache,
-  Masonry,
-  Size,
-  Positioner,
-  MasonryCellProps,
   createMasonryCellPositioner,
-  AutoSizer,
+  Masonry,
+  MasonryCellProps,
+  Positioner,
+  Size,
 } from 'react-virtualized';
 // eslint-disable-next-line @emotion/no-vanilla
 import { css } from '@emotion/css';
 
-import { generateRandomList } from './utils';
 import { NoteListItem } from './NoteListItem';
+import { Note } from '../../mainSlice';
 
 const cellMeasurerCache = new CellMeasurerCache({ defaultHeight: 250, defaultWidth: 200, fixedWidth: true });
 
@@ -26,8 +24,7 @@ const state = {
   overscanByPixels: 0,
 };
 
-function BaseAbout() {
-  const [list] = React.useState(Immutable.List(generateRandomList()));
+export function GalleryView({ notes }: { notes: Array<Note> }) {
   const masonry = React.useRef<Masonry | null>();
   const columnCount = React.useRef(0);
   const size = React.useRef<Size>({ width: 0, height: state.height });
@@ -92,7 +89,7 @@ function BaseAbout() {
   };
 
   const cellRenderer = ({ index, key, parent, style }: MasonryCellProps) => {
-    const data = list.get(index % list.size);
+    const data = notes[index];
 
     return (
       <CellMeasurer cache={cellMeasurerCache} index={index} key={key} parent={parent}>
@@ -125,7 +122,7 @@ function BaseAbout() {
               masonry.current = ref;
             }}
             autoHeight={false}
-            cellCount={list.count()}
+            cellCount={notes.length}
             cellMeasurerCache={cellMeasurerCache}
             // @ts-ignore
             cellPositioner={cellPositioner.current}
@@ -139,5 +136,3 @@ function BaseAbout() {
     </AutoSizer>
   );
 }
-
-export default React.memo(BaseAbout);

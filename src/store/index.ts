@@ -1,12 +1,12 @@
 import { Saga } from 'redux-saga';
 
-import { todosSlice } from '../pages/Todos/todosSlice';
-import { todosSaga } from '../pages/Todos/todoSaga';
+import { mainSlice } from '../pages/Main/mainSlice';
+import { mainSaga } from '../pages/Main/mainSaga';
 import { createStore, sagaMiddleware } from './createStore';
 
-export const store = createStore({ todosState: todosSlice.reducer });
+export const store = createStore({ main: mainSlice.reducer });
 
-sagaMiddleware.run(<Saga>todosSaga);
+sagaMiddleware.run(<Saga>mainSaga);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

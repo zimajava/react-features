@@ -1,7 +1,9 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { createEditor, Descendant } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
 import { withHistory } from 'slate-history';
+// eslint-disable-next-line @emotion/no-vanilla
 import { css } from '@emotion/css';
 
 import { RenderElementProps, RenderLeafProps } from 'slate-react/dist/components/editable';
@@ -23,7 +25,13 @@ function renderLeaf(props: RenderLeafProps) {
   return <Leaf {...props} />;
 }
 
-export default function Note() {
+// https://github.com/ianstormtaylor/slate/tree/main/site/examples/
+
+export default function Editor() {
+  const { noteId } = useParams<{ noteId: string }>();
+
+  console.log(noteId);
+
   const editor = React.useMemo<CustomEditor>(() => withHistory(withReact(createEditor())), []);
 
   const initialValue = React.useMemo<Descendant[]>(() => {

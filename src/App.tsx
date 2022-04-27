@@ -7,15 +7,23 @@ import { css } from '@emotion/css';
 
 import { store } from './store';
 
-const About = loadable(() => import('./pages/About/About'));
-const Articles = loadable(() => import('./pages/Note/Note'));
-const Todos = loadable(() => import('./pages/Todos/Todos'));
+const Main = loadable(() => import('./pages/Main/Main'));
+const Editor = loadable(() => import('./pages/Editor/Editor'));
+
+function NotFound() {
+  return <h2>NotFound</h2>;
+}
 
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <main className="App">
+        <main
+          className={css`
+            margin: 0 auto;
+            max-width: 1080px;
+          `}
+        >
           <header className="App-header">
             <nav>
               <ul
@@ -31,21 +39,15 @@ function App() {
                 `}
               >
                 <li>
-                  <Link to="/">Todos</Link>
-                </li>
-                <li>
-                  <Link to="/articles">Articles</Link>
-                </li>
-                <li>
-                  <Link to="/about">About</Link>
+                  <Link to="/">Main</Link>
                 </li>
               </ul>
             </nav>
           </header>
           <Switch>
-            <Route path="/about" component={About} />
-            <Route path="/articles" component={Articles} />
-            <Route path="/" component={Todos} />
+            <Route exact path="/" component={Main} />
+            <Route exact path="/editor/:noteId" component={Editor} />
+            <Route path="*" component={NotFound} />
           </Switch>
         </main>
       </BrowserRouter>

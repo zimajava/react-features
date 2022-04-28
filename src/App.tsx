@@ -5,6 +5,7 @@ import loadable from '@loadable/component';
 // eslint-disable-next-line @emotion/no-vanilla
 import { css } from '@emotion/css';
 
+import { Location } from 'history';
 import { store } from './store';
 
 const Main = loadable(() => import('./pages/Main/Main'));
@@ -39,7 +40,7 @@ function App() {
                 `}
               >
                 <li>
-                  <Link to="/">Main</Link>
+                  <Link to={(location: Location) => `/${location.search}`}>Main</Link>
                 </li>
               </ul>
             </nav>

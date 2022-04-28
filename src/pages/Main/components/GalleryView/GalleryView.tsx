@@ -12,13 +12,13 @@ import {
 // eslint-disable-next-line @emotion/no-vanilla
 import { css } from '@emotion/css';
 
-import { NoteListItem } from './NoteListItem';
+import { GalleryItem } from './GalleryItem';
 import { Note } from '../../mainSlice';
 
 const cellMeasurerCache = new CellMeasurerCache({ defaultHeight: 250, defaultWidth: 200, fixedWidth: true });
 
 const state = {
-  columnWidth: 307,
+  columnWidth: 340,
   height: 300,
   gutterSize: 10,
   overscanByPixels: 0,
@@ -89,7 +89,7 @@ export function GalleryView({ notes }: { notes: Array<Note> }) {
   };
 
   const cellRenderer = ({ index, key, parent, style }: MasonryCellProps) => {
-    const data = notes[index];
+    const note = notes[index];
 
     return (
       <CellMeasurer cache={cellMeasurerCache} index={index} key={key} parent={parent}>
@@ -104,14 +104,14 @@ export function GalleryView({ notes }: { notes: Array<Note> }) {
           `}
           style={{ ...style, width: state.columnWidth }}
         >
-          <NoteListItem maxWidth={state.columnWidth} data={data} />
+          <GalleryItem maxWidth={state.columnWidth} note={note} />
         </div>
       </CellMeasurer>
     );
   };
 
   return (
-    <AutoSizer style={{ height: 'calc(100vh - 165px)', width: '100%' }} onResize={recomputeRowsSizes}>
+    <AutoSizer style={{ height: 'calc(100vh - 280px)', width: '100%' }} onResize={recomputeRowsSizes}>
       {({ width, height }) => {
         size.current.width = width;
         size.current.height = height;

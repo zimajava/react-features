@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import { v4 } from 'uuid';
+// import { v4 } from 'uuid';
 
 export type Note = {
   id: string;
@@ -8,6 +8,7 @@ export type Note = {
   userId: string;
   content: string;
   preview: string;
+  color: string;
   createdAt: number;
   updatedAt: number;
 };

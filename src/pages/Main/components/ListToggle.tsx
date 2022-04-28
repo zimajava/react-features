@@ -1,5 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
+import { useLocation, useHistory } from 'react-router-dom';
 // eslint-disable-next-line @emotion/no-vanilla
 import { css } from '@emotion/css';
 import AppsRoundedIcon from '@mui/icons-material/AppsRounded';
@@ -58,13 +59,13 @@ const active = css`
 `;
 
 function clickListener(event: React.MouseEvent<HTMLButtonElement>) {
-  const x = event.clientX - event.currentTarget.offsetLeft;
-  const y = event.clientY - event.currentTarget.offsetTop;
+  // const x = event.clientX - event.currentTarget.offsetLeft;
+  // const y = event.clientY - event.currentTarget.offsetTop;
 
   const ripple = document.createElement('span');
   ripple.setAttribute('class', rippleStyle);
-  ripple.style.left = `${x}px`;
-  ripple.style.top = `${y}px`;
+  // ripple.style.left = `${x}px`;
+  // ripple.style.top = `${y}px`;
 
   event.currentTarget.appendChild(ripple);
 
@@ -87,8 +88,10 @@ export function ListToggle({ type, changeType }: Props) {
         className={clsx(buttonStyle, [{ [active]: type === ViewTypeEnum.gallery }])}
         type="button"
         onClick={(event) => {
-          changeType(ViewTypeEnum.gallery);
-          clickListener(event);
+          if (type !== ViewTypeEnum.gallery) {
+            changeType(ViewTypeEnum.gallery);
+            clickListener(event);
+          }
         }}
       >
         <AppsRoundedIcon />
@@ -97,8 +100,10 @@ export function ListToggle({ type, changeType }: Props) {
         className={clsx(buttonStyle, [{ [active]: type === ViewTypeEnum.list }])}
         type="button"
         onClick={(event) => {
-          changeType(ViewTypeEnum.list);
-          clickListener(event);
+          if (type !== ViewTypeEnum.list) {
+            changeType(ViewTypeEnum.list);
+            clickListener(event);
+          }
         }}
       >
         <FormatListBulletedRoundedIcon />

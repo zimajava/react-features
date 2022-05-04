@@ -10,7 +10,18 @@ function* getNotes() {
 
   const { data }: AxiosResponse<Array<Note>> = yield call(axios.get, url);
 
-  yield put(setNotes(data));
+  const mappedData = data.map((item) => {
+    let content;
+    try {
+      content = JSON.parse(item.content);
+    } catch (e) {
+      content = [{ type: 'paragraph', children: [{ text: item.title }] }];
+    }
+
+    return { ...item, content };
+  });
+
+  yield put(setNotes(mappedData));
 }
 
 export function* mainSaga() {

@@ -8,9 +8,7 @@ class DatabaseFile {
   @Column()
   filename: string;
 
-  @Column({
-    type: 'bytea',
-  })
+  @Column({ type: 'bytea' })
   data: Uint8Array;
 }
 

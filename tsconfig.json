@@ -1,22 +1,16 @@
 {
   "compilerOptions": {
-    "allowJs": true,
-    "noEmit": true,
-    "noUnusedLocals": false,
-    "jsx": "react",
-    "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "allowSyntheticDefaultImports": true,
-    "pretty": true,
-    "removeComments": false,
-
     /* Basic Options */
     "target": "ES2021",
     "module": "commonjs",
-    "lib": ["ESNext", "DOM"],
+    "noUnusedLocals": false,
+    "allowSyntheticDefaultImports": true,
 
     /* Strict Type-Checking Options */
     "strict": false,
+//    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
 
     /* Module Resolution Options */
     "moduleResolution": "node",
@@ -28,10 +22,5 @@
     //    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": [
-    "packages/web/src"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

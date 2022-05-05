@@ -18,10 +18,10 @@ export class UsersController {
     type: FileUploadDto,
   })
   async addAvatar(@Req() request: RequestWithUser, @UploadedFile() file: Express.Multer.File) {
-    return this.usersService.addAvatar(request.user.id, {
-      path: file.path,
-      filename: file.originalname,
-      mimetype: file.mimetype,
-    });
+    // return this.usersService.addAvatar(request.user.id, {
+    //   path: file.path,
+    //   filename: file.originalname,
+    //   mimetype: file.mimetype,
+    // });
   }
 }

@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src"
-  ]
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "noEmit": true,
+    "jsx": "react"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }

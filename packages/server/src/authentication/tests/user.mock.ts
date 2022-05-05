@@ -5,17 +5,8 @@ const mockedUser: User = {
   email: 'user@email.com',
   name: 'John',
   password: 'hash',
-  stripeCustomerId: 'stripe_customer_id',
-  phoneNumber: '+48123123123',
-  address: {
-    id: 1,
-    street: 'streetName',
-    city: 'cityName',
-    country: 'countryName',
-  },
   isTwoFactorAuthenticationEnabled: false,
   isEmailConfirmed: false,
-  isPhoneNumberConfirmed: false,
   isRegisteredWithGoogle: false,
 };
 

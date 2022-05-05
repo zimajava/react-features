@@ -15,13 +15,8 @@ export class UsersService {
     private connection: Connection,
   ) {}
 
-  async updateMonthlySubscriptionStatus(stripeCustomerId: string, monthlySubscriptionStatus: string) {
-    return this.usersRepository.update({ stripeCustomerId }, { monthlySubscriptionStatus });
-  }
-
   async getByEmail(email: string) {
-    // @ts-ignore
-    const user = await this.usersRepository.findOne({ email });
+    const user = await this.usersRepository.findOneBy({ email });
     if (user) {
       return user;
     }
@@ -29,14 +24,11 @@ export class UsersService {
   }
 
   async getByIds(ids: number[]) {
-    return this.usersRepository.find({
-      where: { id: In(ids) },
-    });
+    return this.usersRepository.find({ where: { id: In(ids) } });
   }
 
   async getById(id: number) {
-    // @ts-ignore
-    const user = await this.usersRepository.findOne({ id });
+    const user = await this.usersRepository.findOneBy({ id });
     if (user) {
       return user;
     }
@@ -86,15 +78,6 @@ export class UsersService {
       { email },
       {
         isEmailConfirmed: true,
-      },
-    );
-  }
-
-  markPhoneNumberAsConfirmed(userId: number) {
-    return this.usersRepository.update(
-      { id: userId },
-      {
-        isPhoneNumberConfirmed: true,
       },
     );
   }

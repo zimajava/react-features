@@ -23,6 +23,7 @@ export class AuthenticationService {
         password: hashedPassword,
       });
       createdUser.password = undefined;
+
       return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {

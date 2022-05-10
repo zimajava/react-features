@@ -36,9 +36,9 @@ export class UsersService {
   }
 
   async create(userData: CreateUserDto) {
-    const newUser = await this.usersRepository.create({ ...userData });
-    await this.usersRepository.save(newUser);
-    return newUser;
+    const newUser = this.usersRepository.create({ ...userData, isEmailConfirmed: true }); // TODO remove isEmailConfirmed
+
+    return this.usersRepository.save(newUser);
   }
 
   async createWithGoogle(email: string, name: string) {

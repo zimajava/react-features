@@ -10,13 +10,20 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+import { Location } from 'history';
 import { Note } from '../../mainSlice';
-import { CustomLink } from '../CustomLink';
+import { NavLink } from '../../../shared-components';
 
 type Props = {
   maxWidth: number;
   note: Note;
 };
+
+function CustomLink(props: any) {
+  const { noteid } = props;
+
+  return <NavLink {...props} to={(location: Location) => `/editor/${noteid}${location.search}`} />;
+}
 
 export function GalleryItem({ maxWidth, note }: Props) {
   const date = note?.createdAt ? new Date(note.createdAt * 1000).toDateString() : '';

@@ -17,9 +17,11 @@ export class UsersService {
 
   async getByEmail(email: string) {
     const user = await this.usersRepository.findOneBy({ email });
+
     if (user) {
       return user;
     }
+
     throw new HttpException('User with this email does not exist', HttpStatus.NOT_FOUND);
   }
 
@@ -29,14 +31,16 @@ export class UsersService {
 
   async getById(id: number) {
     const user = await this.usersRepository.findOneBy({ id });
+
     if (user) {
       return user;
     }
+
     throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
   }
 
   async create(userData: CreateUserDto) {
-    const newUser = this.usersRepository.create({ ...userData, isEmailConfirmed: true }); // TODO remove isEmailConfirmed
+    const newUser = this.usersRepository.create({ ...userData });
 
     return this.usersRepository.save(newUser);
   }
@@ -44,6 +48,7 @@ export class UsersService {
   async createWithGoogle(email: string, name: string) {
     const newUser = await this.usersRepository.create({ email, name, isRegisteredWithGoogle: true });
     await this.usersRepository.save(newUser);
+
     return newUser;
   }
 
@@ -56,9 +61,7 @@ export class UsersService {
 
   async setCurrentRefreshToken(refreshToken: string, userId: number) {
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.usersRepository.update(userId, {
-      currentHashedRefreshToken,
-    });
+    await this.usersRepository.update(userId, { currentHashedRefreshToken });
   }
 
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
@@ -74,29 +77,18 @@ export class UsersService {
   }
 
   async markEmailAsConfirmed(email: string) {
-    return this.usersRepository.update(
-      { email },
-      {
-        isEmailConfirmed: true,
-      },
-    );
+    return this.usersRepository.update({ email }, { isEmailConfirmed: true });
   }
 
   async removeRefreshToken(userId: number) {
-    return this.usersRepository.update(userId, {
-      currentHashedRefreshToken: null,
-    });
+    return this.usersRepository.update(userId, { currentHashedRefreshToken: null });
   }
 
   async setTwoFactorAuthenticationSecret(secret: string, userId: number) {
-    return this.usersRepository.update(userId, {
-      twoFactorAuthenticationSecret: secret,
-    });
+    return this.usersRepository.update(userId, { twoFactorAuthenticationSecret: secret });
   }
 
   async turnOnTwoFactorAuthentication(userId: number) {
-    return this.usersRepository.update(userId, {
-      isTwoFactorAuthenticationEnabled: true,
-    });
+    return this.usersRepository.update(userId, { isTwoFactorAuthenticationEnabled: true });
   }
 }

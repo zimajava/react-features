@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import VerificationTokenPayload from './verificationTokenPayload.interface';
-import EmailService from '../email/email.service';
+import { JwtService } from '@nestjs/jwt';
+
 import { UsersService } from '../users/users.service';
+import EmailService from '../email/email.service';
+import User from '../users/user.entity';
+import VerificationTokenPayload from './verificationTokenPayload.interface';
 
 @Injectable()
 export class EmailConfirmationService {
@@ -14,37 +16,44 @@ export class EmailConfirmationService {
     private readonly usersService: UsersService,
   ) {}
 
-  public sendVerificationLink(email: string) {
-    const payload: VerificationTokenPayload = { email };
+  public sendVerificationLink(user: User) {
+    const payload: VerificationTokenPayload = { email: user.email };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
       expiresIn: `${this.configService.get('JWT_VERIFICATION_TOKEN_EXPIRATION_TIME')}s`,
     });
 
-    const url = `${this.configService.get('EMAIL_CONFIRMATION_URL')}?token=${token}`;
-
-    const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
+    const url = `${this.configService.get('EMAIL_CONFIRMATION_URL')}/${token}`;
+    const appName = `React features`;
 
     return this.emailService.sendMail({
-      to: email,
+      to: user.email,
       subject: 'Email confirmation',
-      text,
+      html: `<p>Hi, ${user.name}!</p>
+              <p>Welcome to ${appName}. Please click the following link to confirm your email:</p>
+              <p><a href="${url}" target="_blank"><button>Confirm email</button></a></p>
+              <p>Below are your login information</p>
+              <p>Your email is: ${user.email}</p>`,
     });
   }
 
   public async resendConfirmationLink(userId: number) {
     const user = await this.usersService.getById(userId);
+
     if (user.isEmailConfirmed) {
       throw new BadRequestException('Email already confirmed');
     }
-    await this.sendVerificationLink(user.email);
+
+    await this.sendVerificationLink(user);
   }
 
   public async confirmEmail(email: string) {
     const user = await this.usersService.getByEmail(email);
+
     if (user.isEmailConfirmed) {
       throw new BadRequestException('Email already confirmed');
     }
+
     await this.usersService.markEmailAsConfirmed(email);
   }
 
@@ -57,11 +66,13 @@ export class EmailConfirmationService {
       if (typeof payload === 'object' && 'email' in payload) {
         return payload.email;
       }
+
       throw new BadRequestException();
     } catch (error) {
       if (error?.name === 'TokenExpiredError') {
         throw new BadRequestException('Email confirmation token expired');
       }
+
       throw new BadRequestException('Bad confirmation token');
     }
   }

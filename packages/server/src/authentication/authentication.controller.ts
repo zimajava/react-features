@@ -32,8 +32,8 @@ export class AuthenticationController {
   @Post('register')
   async register(@Body() registrationData: RegisterDto) {
     const user = await this.authenticationService.register(registrationData);
-    console.log(user);
-    // await this.emailConfirmationService.sendVerificationLink(registrationData.email); // TODO fix
+    await this.emailConfirmationService.sendVerificationLink(user);
+
     return user;
   }
 
@@ -53,7 +53,7 @@ export class AuthenticationController {
     request.res.setHeader('Set-Cookie', [accessTokenCookie, refreshTokenCookie]);
 
     if (user.isTwoFactorAuthenticationEnabled) {
-      return;
+      return null;
     }
 
     return user;
@@ -79,6 +79,7 @@ export class AuthenticationController {
     const accessTokenCookie = this.authenticationService.getCookieWithJwtAccessToken(request.user.id);
 
     request.res.setHeader('Set-Cookie', accessTokenCookie);
+
     return request.user;
   }
 }

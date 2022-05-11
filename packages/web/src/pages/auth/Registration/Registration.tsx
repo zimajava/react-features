@@ -22,7 +22,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import { Alert } from '../components/Alert';
 import { Form } from '../components/Form';
-import { NavLink } from '../../shared-components';
+import { NavLink, Modal } from '../../shared-components';
 
 const validationSchema = yup.object({
   name: yup.string().min(3, 'Username should be of minimum 3 characters length').required('Username is required'),
@@ -35,8 +35,12 @@ const validationSchema = yup.object({
 });
 
 export default function Registration() {
+  const [user, setUser] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   const togglePassword = () => setShowPassword((prevState) => !prevState);
   const toggleConfirmPassword = () => setShowConfirmPassword((prevState) => !prevState);
@@ -55,13 +59,14 @@ export default function Registration() {
       try {
         const url = 'http://localhost:3500/authentication/register';
         const { data } = await axios.post(url, values, { withCredentials: true });
-        console.log(data);
+
+        setUser(data);
+        handleOpenModal();
       } catch (e) {
         console.log(e.response.data.message);
         // @ts-ignore
         formikHelpers.setErrors({ errorMsg: e.response.data.message });
       }
-
 
       // onSubmit(values).catch((e) => {
       //   formikHelpers.setSubmitting(false);
@@ -211,6 +216,16 @@ export default function Registration() {
           </Grid>
         </Form>
       </Box>
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <>
+          <Typography variant="h6" component="h2">
+            {`Hi, ${user?.name}!`}
+          </Typography>
+          <Typography id="spring-modal-description" sx={{ mt: 2 }}>
+            {`Check your email to confirm: ${user?.email}`}
+          </Typography>
+        </>
+      </Modal>
     </Container>
   );
 }

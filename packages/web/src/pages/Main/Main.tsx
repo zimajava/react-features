@@ -2,8 +2,10 @@
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import Paper from '@mui/material/Paper';
 
 import { RootState } from '../../store';
+import { Container } from '../shared-components';
 import { Note } from './mainSlice';
 import { actionGetNotes } from './actions';
 import { ListToggle } from './components/ListToggle';
@@ -44,10 +46,10 @@ function BaseMain() {
   const Component = type === ViewTypeEnum.gallery ? GalleryView : ListView;
 
   return (
-    <div>
+    <Container component={Paper} maxWidth="xl">
       <ListToggle type={type} changeType={setType} />
       {notes.length ? <Component notes={notes} /> : <div>...Loading</div>}
-    </div>
+    </Container>
   );
 }
 

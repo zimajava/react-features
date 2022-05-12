@@ -13,14 +13,29 @@ export type Note = {
   updatedAt: number;
 };
 
+export type User = {
+  id: number;
+  email: string;
+  name: string;
+  avatarId: any;
+  isEmailConfirmed: boolean;
+  isRegisteredWithGoogle: boolean;
+  isTwoFactorAuthenticationEnabled: boolean;
+};
+
 export type MainState = {
   isLoading: boolean;
   notes: Array<Note>;
+  // TODO move
+  isAuthenticated: boolean;
+  user: User | null;
 };
 
 export const initialState: MainState = {
   isLoading: false,
   notes: [],
+  isAuthenticated: false,
+  user: null,
 };
 
 export const mainSlice = createSlice({
@@ -30,9 +45,15 @@ export const mainSlice = createSlice({
     setNotes(state, { payload }) {
       state.notes = payload;
     },
+    setAuthenticated(state, { payload }) {
+      state.isAuthenticated = payload;
+    },
+    setUser(state, { payload }) {
+      state.user = payload;
+    },
   },
 });
 
-const { setNotes } = mainSlice.actions;
+const { setNotes, setAuthenticated, setUser } = mainSlice.actions;
 
-export { setNotes };
+export { setNotes, setAuthenticated, setUser };

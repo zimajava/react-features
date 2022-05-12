@@ -27,6 +27,7 @@ class User {
   public currentHashedRefreshToken?: string;
 
   @Column({ nullable: true })
+  @Exclude()
   public twoFactorAuthenticationSecret?: string;
 
   @Column({ default: false })

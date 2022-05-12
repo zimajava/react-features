@@ -2,10 +2,9 @@ import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
+import { Container } from '../../shared-components';
 import { Alert } from '../components/Alert';
 
 export default function ConfirmEmail() {
@@ -26,22 +25,11 @@ export default function ConfirmEmail() {
   }, [push, token]);
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        component={Paper}
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          padding: 3,
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Confirm Email
-        </Typography>
-        {error && <Alert color="error">{error}</Alert>}
-      </Box>
+    <Container component={Paper}>
+      <Typography component="h1" variant="h5">
+        Confirm Email
+      </Typography>
+      {error && <Alert color="error">{error}</Alert>}
     </Container>
   );
 }
